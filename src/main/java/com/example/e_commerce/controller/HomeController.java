@@ -2,6 +2,10 @@ package com.example.e_commerce.controller;
 
 import java.util.*;
 
+import org.springframework.security.authentication.AnonymousAuthenticationProvider;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +40,13 @@ public class HomeController {
     @GetMapping("/shop")
     public String shop(Model model) {
 
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+
+        System.out.println(authentication instanceof AnonymousAuthenticationToken);
+        System.out.println("authencation : "+authentication.isAuthenticated()); // 
+        System.out.println("authencation : "+authentication.getPrincipal());
+
+        model.addAttribute("principal", authentication.getPrincipal());// if ! auth  return  string is anonymousUser
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("products", productService.getAllProducts());
         return "shop";
